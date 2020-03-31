@@ -75,24 +75,24 @@ public final class UserRepresentation implements Representation<User> {
         String actionsKey = "%ACTIONS%";
         
         String datingAppJsonTemplate = "{"
-                + "'type':" + "'"+typeKey+"',"
-                + "'properties': "
+                + "\"type\":" + "\""+typeKey+"\","
+                + "\"properties\": "
                 + propertiesKey
                 + ","
-                + "'children': ["
+                + "\"children\": ["
                 + childrenKey
                 + "],"
-                + "'links': ["
+                + "\"links\": ["
                 + linkKey
                 + "],"
-                + "'actions': ["
+                + "\"actions\": ["
                 + actionsKey
                 + "]"
                 + "}";
 
         String type = "User";
-        String childrenRepresentation = children.stream().map(child -> child.toString()).collect(Collectors.joining(","));
-        String linksRepresentation = links.entrySet().stream().map(entry -> String.format("{'rel':'%s', 'href':'%s'}", entry.getKey(), entry.getValue())).collect(Collectors.joining(","));
+        String childrenRepresentation = children.stream().map(Object::toString).collect(Collectors.joining(","));
+        String linksRepresentation = links.entrySet().stream().map(entry -> String.format("{\"rel\":\"%s\", \"href\":\"%s\"}", entry.getKey(), entry.getValue())).collect(Collectors.joining(","));
         String actionsRepresentation = "";
         
         return datingAppJsonTemplate.replace(typeKey, type)

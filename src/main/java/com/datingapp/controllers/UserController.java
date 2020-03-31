@@ -23,10 +23,12 @@
  */
 package com.datingapp.controllers;
 
+import com.datingapp.db.Users;
 import com.datingapp.models.User;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
 /**
@@ -37,7 +39,10 @@ import javax.ws.rs.core.Response;
 public class UserController {
     @GET
     @Path("/{userId}")
+    @Produces("application/vnd.datingapp+json")
     public Response getUser(@PathParam("userId") String userId) {
-        return Response.ok("User" + userId).build();
+        Users users = new Users();
+        User user = users.getUserById(userId);
+        return Response.ok(user).build();
     }
 }

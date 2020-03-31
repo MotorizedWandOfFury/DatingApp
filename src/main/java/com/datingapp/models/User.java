@@ -29,7 +29,7 @@ import java.time.LocalDate;
  *
  * @author Yaw Agyepong <yaw.agyepong@gmail.com>
  */
-public class User {
+public final class User {
     private final String userId;
     private final String firstName;
     private final String lastName;
@@ -101,15 +101,15 @@ public class User {
 
     public String toJsonString() {
         return "{" 
-                + "'userId': '" + userId + "', "
-                + "'firstName': '" + firstName + "', "
-                + "'lastName': '" + lastName + "', "
-                + "'birthDate': '" + birthDate.toString() + "', "
-                + "'ethnicity': '" + ethnicity + "', "
-                + "'gender': '" + gender + "', "
-                + "'religion': '" + religion + "', "
-                + "'politicalOrientation': '" + politicalOrientation + "', "
-                + "'location': '" + location + "'"
-                + '}';
+                + "\"userId\": \"" + userId + "\", "
+                + "\"firstName\": \"" + firstName + "\", "
+                + "\"lastName\": \"" + lastName + "\", "
+                + "\"birthDate\": \"" + birthDate.toString() + "\", "
+                + "\"ethnicity\": \"" + ethnicity + "\", "
+                + "\"gender\": \"" + gender + "\", "
+                + "\"religion\": \"" + religion + "\", "
+                + "\"politicalOrientation\": \"" + politicalOrientation + "\", "
+                + "\"location\": \"" + location + "\""
+                + "}";
     }
 }

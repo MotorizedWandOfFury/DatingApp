@@ -70,16 +70,16 @@ public class UserRepresentationTest {
         User user = new User("1", "first", "last", birthDate, "black", "non-binary", "atheist", "leftist", "Atlanta, GA");
         UserRepresentation instance = new UserRepresentation(user);
         String expResult = "{"
-                + "'type':'User',"
-                + "'properties': {"
-                + "'userId': '1', 'firstName': 'first', 'lastName': 'last', 'birthDate': '" + birthDate.toString() + "', " +
-                "'ethnicity': 'black', 'gender': 'non-binary', 'religion': 'atheist', 'politicalOrientation': 'leftist', 'location': 'Atlanta, GA'"
+                + "\"type\":\"User\","
+                + "\"properties\": {"
+                + "\"userId\": \"1\", \"firstName\": \"first\", \"lastName\": \"last\", \"birthDate\": \"" + birthDate.toString() + "\", " +
+                "\"ethnicity\": \"black\", \"gender\": \"non-binary\", \"religion\": \"atheist\", \"politicalOrientation\": \"leftist\", \"location\": \"Atlanta, GA\""
                 + "},"
-                + "'children': ["
+                + "\"children\": ["
                 + "],"
-                + "'links': ["
+                + "\"links\": ["
                 + "],"
-                + "'actions': ["
+                + "\"actions\": ["
                 + "]"
                 + "}";
         String result = instance.build();
