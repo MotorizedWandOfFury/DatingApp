@@ -25,6 +25,7 @@
 
 package com.datingapp.representations.datingappjson;
 
+import com.datingapp.db.PgUsers;
 import com.datingapp.models.User;
 
 import javax.ws.rs.Produces;
@@ -39,6 +40,7 @@ import java.io.PrintWriter;
 import java.io.Writer;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
+import java.util.Arrays;
 
 /**
  *
@@ -49,7 +51,7 @@ import java.lang.reflect.Type;
 public final class UserMessageBodyWriter implements MessageBodyWriter<User> {
     @Override
     public boolean isWriteable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
-        return type == User.class;
+       return Arrays.stream(type.getInterfaces()).anyMatch((i) -> i == User.class);
     }
 
     @Override

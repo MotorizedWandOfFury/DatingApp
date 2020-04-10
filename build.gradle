@@ -7,9 +7,13 @@ buildscript {
     }
 }
 
-apply plugin: 'java'
-apply plugin: 'war'
+plugins {
+    id 'java'
+    id 'war'
+    id 'nu.studer.jooq' version '4.1'
+}
 apply from: 'https://raw.github.com/gretty-gradle-plugin/gretty/master/pluginScripts/gretty.plugin'
+
 
 repositories {
     mavenCentral()
@@ -17,13 +21,20 @@ repositories {
 }
 
 dependencies {
+    implementation 'com.google.code.gson:gson:2.8.6'
+
     implementation 'org.glassfish.jersey.core:jersey-server:2.30'
     implementation 'org.glassfish.jersey.containers:jersey-container-servlet:2.30'
     implementation 'org.glassfish.jersey.inject:jersey-hk2:2.30'
     implementation 'org.glassfish.jersey.media:jersey-media-json-jackson:2.30'
-    implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'jakarta.xml.bind:jakarta.xml.bind-api:2.3.2'
     implementation 'org.glassfish.jaxb:jaxb-runtime:2.3.2'
+    implementation 'org.apache.tomcat:tomcat-jdbc:9.0.5'
+
+    implementation 'org.jooq:jooq:3.13.1'
+    jooqRuntime 'postgresql:postgresql:9.2-1002.jdbc4'
+    implementation 'postgresql:postgresql:9.2-1002.jdbc4'
+
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.4.2'
     testRuntime 'org.junit.jupiter:junit-jupiter-engine:5.4.2'
 }
@@ -36,4 +47,52 @@ gretty {
 
 test {
     useJUnitPlatform()
+}
+
+jooq {
+    generateSchemaSourceOnCompilation = true
+    datingappdb(sourceSets.main) {
+        jdbc {
+            driver = 'org.postgresql.Driver'
+            url = 'jdbc:postgresql://localhost:5432/datingappdb'
+            user = 'datingappdbuser'
+            password = 'datingappdbuser'
+        }
+
+        generator {
+            name = 'org.jooq.codegen.DefaultGenerator'
+
+            strategy {
+                name = null
+                matchers {
+                    tables {
+                        table {
+                            pojoClass {
+                                transform = 'PASCAL'
+                                expression = 'Postgres_$0'
+                            }
+                            tableClass {
+                                transform = 'PASCAL'
+                                expression = 'Postgres_$0'
+                            }
+                        }
+                    }
+                }
+            }
+            
+            database {
+                name = 'org.jooq.meta.postgres.PostgresDatabase'
+                inputSchema = 'public'
+                includes = '.*'
+                excludes = ''
+            }
+
+            generate {
+                relations = true
+                deprecated = false
+                immutablePojos = false
+                fluentSetters = true
+            }
+        }
+    }
 }

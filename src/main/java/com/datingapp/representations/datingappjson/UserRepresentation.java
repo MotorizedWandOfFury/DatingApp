@@ -66,6 +66,31 @@ public final class UserRepresentation implements Representation<User> {
         return this;
     }
 
+    private String generateProperties() {
+        return "{"
+                + "\"userId\": \"" + user.userName() + "\", "
+                + "\"firstName\": \"" + user.firstName() + "\", "
+                + "\"lastName\": \"" + user.lastName() + "\", "
+                + "\"birthDate\": \"" + user.birthDate().toString() + "\", "
+                + "\"ethnicity\": \"" + user.ethnicity() + "\", "
+                + "\"gender\": \"" + user.gender() + "\", "
+                + "\"religion\": \"" + user.religion() + "\", "
+                + "\"politicalOrientation\": \"" + user.politicalOrientation() + "\", "
+                + "}";
+    }
+
+    private String generateChildren() {
+        return children.stream().map(Object::toString).collect(Collectors.joining(","));
+    }
+
+    private String generateLinks() {
+        return links.entrySet().stream().map(entry -> String.format("{\"rel\":\"%s\", \"href\":\"%s\"}", entry.getKey(), entry.getValue())).collect(Collectors.joining(","));
+    }
+
+    private String generateActions() {
+        return "";
+    }
+
     @Override
     public String build() {
         String typeKey = "%TYPE%";
@@ -89,16 +114,11 @@ public final class UserRepresentation implements Representation<User> {
                 + actionsKey
                 + "]"
                 + "}";
-
-        String type = "User";
-        String childrenRepresentation = children.stream().map(Object::toString).collect(Collectors.joining(","));
-        String linksRepresentation = links.entrySet().stream().map(entry -> String.format("{\"rel\":\"%s\", \"href\":\"%s\"}", entry.getKey(), entry.getValue())).collect(Collectors.joining(","));
-        String actionsRepresentation = "";
         
-        return datingAppJsonTemplate.replace(typeKey, type)
-                .replace(propertiesKey, user.toJsonString())
-                .replace(childrenKey, childrenRepresentation)
-                .replace(linkKey, linksRepresentation)
-                .replace(actionsKey, actionsRepresentation);
+        return datingAppJsonTemplate.replace(typeKey, "User")
+                .replace(propertiesKey, generateProperties())
+                .replace(childrenKey, generateChildren())
+                .replace(linkKey, generateLinks())
+                .replace(actionsKey, generateActions());
     }
 }

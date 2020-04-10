@@ -23,13 +23,14 @@
  */
 package com.datingapp.controllers;
 
-import com.datingapp.db.Users;
+import com.datingapp.db.PgUsers;
+import com.datingapp.models.Users;
 import com.datingapp.models.User;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+
+import javax.ws.rs.*;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
+import java.sql.SQLException;
 
 /**
  *
@@ -38,11 +39,22 @@ import javax.ws.rs.core.Response;
 @Path("/users")
 public class UserController {
     @GET
-    @Path("/{userId}")
+    @Path("/{username}")
     @Produces("application/vnd.datingapp+json")
-    public Response getUser(@PathParam("userId") String userId) {
-        Users users = new Users();
-        User user = users.getUserById(userId);
-        return Response.ok(user).build();
+    public Response getUser(@PathParam("username") String username, @HeaderParam(HttpHeaders.AUTHORIZATION) String authToken) {
+
+        try {
+            Users users = new PgUsers();
+            User user = users.getUserById(1);
+
+            if(user == null) {
+                throw new NotFoundException();
+            }
+
+            return Response.ok(user).build();
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+            throw new InternalServerErrorException(e);
+        }
     }
 }

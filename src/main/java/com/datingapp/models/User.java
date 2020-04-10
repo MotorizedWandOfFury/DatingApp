@@ -29,87 +29,13 @@ import java.time.LocalDate;
  *
  * @author Yaw Agyepong <yaw.agyepong@gmail.com>
  */
-public final class User {
-    private final String userId;
-    private final String firstName;
-    private final String lastName;
-    private final LocalDate birthDate;
-    private final String ethnicity;
-    private final String gender;
-    private final String religion;
-    private final String politicalOrientation;
-    private final String location;
-/**
- * 
- * @param userId
- * @param firstName
- * @param lastName
- * @param birthDate
- * @param ethnicity
- * @param gender
- * @param religion
- * @param politicalOrientation
- * @param location 
- */
-    public User(String userId, String firstName, String lastName, LocalDate birthDate, String ethnicity, String gender, String religion, String politicalOrientation, String location) {
-        this.userId = userId;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.birthDate = birthDate;
-        this.ethnicity = ethnicity;
-        this.gender = gender;
-        this.religion = religion;
-        this.politicalOrientation = politicalOrientation;
-        this.location = location;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public LocalDate getBirthDate() {
-        return birthDate;
-    }
-
-    public String getEthnicity() {
-        return ethnicity;
-    }
-
-    public String getGender() {
-        return gender;
-    }
-
-    public String getReligion() {
-        return religion;
-    }
-
-    public String getPoliticalOrientation() {
-        return politicalOrientation;
-    }
-
-    public String getLocation() {
-        return location;
-    }   
-
-    public String toJsonString() {
-        return "{" 
-                + "\"userId\": \"" + userId + "\", "
-                + "\"firstName\": \"" + firstName + "\", "
-                + "\"lastName\": \"" + lastName + "\", "
-                + "\"birthDate\": \"" + birthDate.toString() + "\", "
-                + "\"ethnicity\": \"" + ethnicity + "\", "
-                + "\"gender\": \"" + gender + "\", "
-                + "\"religion\": \"" + religion + "\", "
-                + "\"politicalOrientation\": \"" + politicalOrientation + "\", "
-                + "\"location\": \"" + location + "\""
-                + "}";
-    }
+public interface User {
+    public String userName();
+    public String firstName();
+    public String lastName();
+    public LocalDate birthDate();
+    public String ethnicity();
+    public String gender();
+    public String religion();
+    public String politicalOrientation();
 }

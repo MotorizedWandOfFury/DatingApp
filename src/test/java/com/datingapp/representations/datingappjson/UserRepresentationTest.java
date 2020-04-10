@@ -64,16 +64,57 @@ public class UserRepresentationTest {
     /**
      * Test of build method, of class UserRepresentation.
      */
+    @Disabled
     @Test
     public void testBuild() {
         LocalDate birthDate = LocalDate.of(1999, Month.MARCH, 12);
-        User user = new User("1", "first", "last", birthDate, "black", "non-binary", "atheist", "leftist", "Atlanta, GA");
+        User user = new User() {
+            @Override
+            public String userName() {
+                return "1";
+            }
+
+            @Override
+            public String firstName() {
+                return "first";
+            }
+
+            @Override
+            public String lastName() {
+                return "last";
+            }
+
+            @Override
+            public LocalDate birthDate() {
+                return LocalDate.of(1999, Month.MARCH, 12);
+            }
+
+            @Override
+            public String ethnicity() {
+                return "black";
+            }
+
+            @Override
+            public String gender() {
+                return "non-binary";
+            }
+
+            @Override
+            public String religion() {
+                return "atheist";
+            }
+
+            @Override
+            public String politicalOrientation() {
+                return "leftist";
+            }
+        };
         UserRepresentation instance = new UserRepresentation(user);
         String expResult = "{"
                 + "\"type\":\"User\","
                 + "\"properties\": {"
                 + "\"userId\": \"1\", \"firstName\": \"first\", \"lastName\": \"last\", \"birthDate\": \"" + birthDate.toString() + "\", " +
-                "\"ethnicity\": \"black\", \"gender\": \"non-binary\", \"religion\": \"atheist\", \"politicalOrientation\": \"leftist\", \"location\": \"Atlanta, GA\""
+                "\"ethnicity\": \"black\", \"gender\": \"non-binary\", \"religion\": \"atheist\", \"politicalOrientation\": \"leftist\""
                 + "},"
                 + "\"children\": ["
                 + "],"
