@@ -33,7 +33,7 @@ dependencies {
 
     implementation 'org.jooq:jooq:3.13.1'
     jooqRuntime 'postgresql:postgresql:9.2-1002.jdbc4'
-    implementation 'postgresql:postgresql:9.2-1002.jdbc4'
+    runtime 'postgresql:postgresql:9.2-1002.jdbc4'
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.4.2'
     testRuntime 'org.junit.jupiter:junit-jupiter-engine:5.4.2'

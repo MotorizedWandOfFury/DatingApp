@@ -60,6 +60,7 @@ public final class UserMessageBodyWriter implements MessageBodyWriter<User> {
 
         Writer writer = new PrintWriter(entityStream);
         writer.write(representation.build());
+        writer.write('\n');
         writer.flush();
         writer.close();
     }
