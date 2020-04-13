@@ -28,8 +28,13 @@ package com.datingapp.controllers;
 import com.datingapp.models.Auth;
 import com.datingapp.representations.Action;
 import com.datingapp.representations.datingappjson.AuthRepresentation;
+import org.glassfish.jersey.server.ManagedAsync;
 
-import javax.ws.rs.*;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.container.AsyncResponse;
+import javax.ws.rs.container.Suspended;
 import javax.ws.rs.core.Response;
 
 /**
@@ -39,7 +44,8 @@ import javax.ws.rs.core.Response;
 public final class AuthenticationController {
     @GET
     @Produces("application/vnd.datingapp+json")
-    public Response provideAuth() {
+    @ManagedAsync
+    public void provideAuth(@Suspended final AsyncResponse response) {
         Auth auth = new Auth() {
             @Override
             public String toString() {
@@ -52,6 +58,6 @@ public final class AuthenticationController {
         representation.addLink("self", "/auth");
         representation.addLink("sign-up", "/registration");
 
-        return Response.ok(representation).build();
+        response.resume(Response.ok(representation).build());
     }
 }

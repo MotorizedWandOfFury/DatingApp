@@ -27,8 +27,17 @@ import com.datingapp.db.PgUsers;
 import com.datingapp.models.Users;
 import com.datingapp.models.User;
 import com.datingapp.representations.datingappjson.UserRepresentation;
+import org.glassfish.jersey.server.ManagedAsync;
 
-import javax.ws.rs.*;
+import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.InternalServerErrorException;
+import javax.ws.rs.NotFoundException;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.container.AsyncResponse;
+import javax.ws.rs.container.Suspended;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import java.sql.SQLException;
@@ -42,23 +51,27 @@ public final class UserController {
     @GET
     @Path("/{username}")
     @Produces("application/vnd.datingapp+json")
-    public Response getUser(@PathParam("username") String username, @HeaderParam(HttpHeaders.AUTHORIZATION) String authToken) {
+    @ManagedAsync
+    public void getUser(
+            @PathParam("username") String username,
+            @HeaderParam(HttpHeaders.AUTHORIZATION) String authToken,
+            @Suspended final AsyncResponse response) {
 
         try {
             Users users = new PgUsers();
             User user = users.getUserById(1);
 
             if(user == null) {
-                throw new NotFoundException();
+                response.resume(new NotFoundException()) ;
             }
 
             UserRepresentation representation = new UserRepresentation(user);
             representation.addLink("self", "/users/"+username);
 
-            return Response.ok(representation).build();
+             response.resume(Response.ok(representation).build());
         } catch (SQLException e) {
             System.err.println(e.getMessage());
-            throw new InternalServerErrorException(e);
+            response.resume(new InternalServerErrorException(e));
         }
     }
 }
