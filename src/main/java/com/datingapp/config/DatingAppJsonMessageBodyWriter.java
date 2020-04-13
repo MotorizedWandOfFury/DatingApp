@@ -23,35 +23,42 @@
  *
  */
 
-package com.datingapp.controllers;
+package com.datingapp.config;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.Path;
+import com.datingapp.representations.Representation;
+
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.ext.MessageBodyWriter;
+import javax.ws.rs.ext.Provider;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.io.Writer;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Type;
+import java.util.Arrays;
 
 /**
  *
  * @author Yaw Agyepong <yaw.agyepong@gmail.com>
  */
-@Path("/")
+@Provider
 @Produces("application/vnd.datingapp+json")
-public class RootController {
-    @GET
-    public void getSiteRoot(
-            @Context final HttpServletRequest request,
-            @Context final HttpServletResponse response,
-            @HeaderParam(HttpHeaders.AUTHORIZATION) String authToken) throws ServletException, IOException {
-        if(authToken == null || authToken.isBlank()) {
-            request.getRequestDispatcher("/auth").forward(request, response);
-        } else {
-            request.getRequestDispatcher("/users/3").forward(request, response);
-        }
+public final class DatingAppJsonMessageBodyWriter implements MessageBodyWriter<Representation<?>> {
+    @Override
+    public boolean isWriteable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
+       return Arrays.stream(type.getInterfaces()).anyMatch((i) -> i == Representation.class);
+    }
+
+    @Override
+    public void writeTo(Representation<?> resourceRepresentation, Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType, MultivaluedMap<String, Object> httpHeaders, OutputStream entityStream) throws IOException, WebApplicationException {
+        Writer writer = new PrintWriter(entityStream);
+        writer.write(resourceRepresentation.build());
+        writer.write('\n');
+        writer.flush();
+        writer.close();
     }
 }

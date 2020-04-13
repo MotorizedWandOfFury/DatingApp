@@ -33,16 +33,14 @@ import org.jooq.generated.tables.records.UsersRecord;
 import org.jooq.impl.DSL;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.time.LocalDate;
 
 import static org.jooq.generated.Tables.USERS;
 
 /**
  * @author Yaw Agyepong <yaw.agyepong@gmail.com>
  */
-public class PgUsers implements Users {
+public final class PgUsers implements Users {
 
     public User getUserById(int id) throws SQLException {
         User user = null;
@@ -55,7 +53,7 @@ public class PgUsers implements Users {
                     .fetchOne()
                     .into(USERS);
 
-            user = toUser(usersRecord);
+            user = new PgUser(usersRecord);
         }
 
         return user;
@@ -73,53 +71,9 @@ public class PgUsers implements Users {
                     .fetchOne()
                     .into(USERS);
 
-            user = toUser(usersRecord);
+            user = new PgUser(usersRecord);
         }
 
         return user;
-    }
-
-    private User toUser(UsersRecord user) {
-        return new User() {
-            @Override
-            public String userName() {
-                return user.getUserName();
-            }
-
-            @Override
-            public String firstName() {
-                return user.getFirstName();
-            }
-
-            @Override
-            public String lastName() {
-                return user.getLastName();
-            }
-
-            @Override
-            public LocalDate birthDate() {
-                return user.getBirthday().toLocalDate();
-            }
-
-            @Override
-            public String ethnicity() {
-                return user.getEthnicity().getLiteral();
-            }
-
-            @Override
-            public String gender() {
-                return user.getGender().getLiteral();
-            }
-
-            @Override
-            public String religion() {
-                return "";
-            }
-
-            @Override
-            public String politicalOrientation() {
-                return "";
-            }
-        };
     }
 }

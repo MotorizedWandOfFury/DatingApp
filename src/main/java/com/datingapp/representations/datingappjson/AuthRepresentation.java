@@ -25,43 +25,37 @@
 
 package com.datingapp.representations.datingappjson;
 
-import com.datingapp.db.PgUsers;
-import com.datingapp.models.User;
-
-import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.ext.MessageBodyWriter;
-import javax.ws.rs.ext.Provider;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.io.Writer;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Type;
-import java.util.Arrays;
+import com.datingapp.models.Auth;
+import com.datingapp.representations.Action;
+import com.datingapp.representations.Representation;
 
 /**
- *
  * @author Yaw Agyepong <yaw.agyepong@gmail.com>
  */
-@Provider
-@Produces("application/vnd.datingapp+json")
-public final class UserMessageBodyWriter implements MessageBodyWriter<User> {
-    @Override
-    public boolean isWriteable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
-       return Arrays.stream(type.getInterfaces()).anyMatch((i) -> i == User.class);
+public final class AuthRepresentation implements Representation<Auth> {
+    private final DatingAppJsonRepresentationBuilder<Auth> representationBuilder;
+
+    public AuthRepresentation(Auth auth) {
+        representationBuilder = new DatingAppJsonRepresentationBuilder<>(auth, "Auth");
     }
 
     @Override
-    public void writeTo(User user, Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType, MultivaluedMap<String, Object> httpHeaders, OutputStream entityStream) throws IOException, WebApplicationException {
-        UserRepresentation representation = new UserRepresentation(user);
+    public void addChild(Representation<?> childRepresentation) {
+        representationBuilder.addChild(childRepresentation);
+    }
 
-        Writer writer = new PrintWriter(entityStream);
-        writer.write(representation.build());
-        writer.write('\n');
-        writer.flush();
-        writer.close();
+    @Override
+    public void addLink(String relationship, String href) {
+        representationBuilder.addLink(relationship, href);
+    }
+
+    @Override
+    public void addAction(Action action) {
+        representationBuilder.addAction(action);
+    }
+
+    @Override
+    public String build() {
+        return representationBuilder.build();
     }
 }

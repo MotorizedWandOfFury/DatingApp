@@ -25,33 +25,33 @@
 
 package com.datingapp.controllers;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.HttpHeaders;
-import java.io.IOException;
+import com.datingapp.models.Auth;
+import com.datingapp.representations.Action;
+import com.datingapp.representations.datingappjson.AuthRepresentation;
+
+import javax.ws.rs.*;
+import javax.ws.rs.core.Response;
 
 /**
- *
  * @author Yaw Agyepong <yaw.agyepong@gmail.com>
  */
-@Path("/")
-@Produces("application/vnd.datingapp+json")
-public class RootController {
+@Path("/auth")
+public final class AuthenticationController {
     @GET
-    public void getSiteRoot(
-            @Context final HttpServletRequest request,
-            @Context final HttpServletResponse response,
-            @HeaderParam(HttpHeaders.AUTHORIZATION) String authToken) throws ServletException, IOException {
-        if(authToken == null || authToken.isBlank()) {
-            request.getRequestDispatcher("/auth").forward(request, response);
-        } else {
-            request.getRequestDispatcher("/users/3").forward(request, response);
-        }
+    @Produces("application/vnd.datingapp+json")
+    public Response provideAuth() {
+        Auth auth = new Auth() {
+            @Override
+            public String toString() {
+                return super.toString();
+            }
+        };
+
+        AuthRepresentation representation = new AuthRepresentation(auth);
+        representation.addAction(Action.newLoginAction());
+        representation.addLink("self", "/auth");
+        representation.addLink("sign-up", "/registration");
+
+        return Response.ok(representation).build();
     }
 }

@@ -23,35 +23,10 @@
  *
  */
 
-package com.datingapp.controllers;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.HttpHeaders;
-import java.io.IOException;
+package com.datingapp.models;
 
 /**
- *
  * @author Yaw Agyepong <yaw.agyepong@gmail.com>
  */
-@Path("/")
-@Produces("application/vnd.datingapp+json")
-public class RootController {
-    @GET
-    public void getSiteRoot(
-            @Context final HttpServletRequest request,
-            @Context final HttpServletResponse response,
-            @HeaderParam(HttpHeaders.AUTHORIZATION) String authToken) throws ServletException, IOException {
-        if(authToken == null || authToken.isBlank()) {
-            request.getRequestDispatcher("/auth").forward(request, response);
-        } else {
-            request.getRequestDispatcher("/users/3").forward(request, response);
-        }
-    }
+public interface Auth {
 }

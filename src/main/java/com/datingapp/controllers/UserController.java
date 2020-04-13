@@ -26,6 +26,7 @@ package com.datingapp.controllers;
 import com.datingapp.db.PgUsers;
 import com.datingapp.models.Users;
 import com.datingapp.models.User;
+import com.datingapp.representations.datingappjson.UserRepresentation;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.HttpHeaders;
@@ -37,7 +38,7 @@ import java.sql.SQLException;
  * @author Yaw Agyepong <yaw.agyepong@gmail.com>
  */
 @Path("/users")
-public class UserController {
+public final class UserController {
     @GET
     @Path("/{username}")
     @Produces("application/vnd.datingapp+json")
@@ -51,7 +52,10 @@ public class UserController {
                 throw new NotFoundException();
             }
 
-            return Response.ok(user).build();
+            UserRepresentation representation = new UserRepresentation(user);
+            representation.addLink("self", "/users/"+username);
+
+            return Response.ok(representation).build();
         } catch (SQLException e) {
             System.err.println(e.getMessage());
             throw new InternalServerErrorException(e);

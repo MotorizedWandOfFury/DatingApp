@@ -23,35 +23,22 @@
  *
  */
 
-package com.datingapp.controllers;
+package com.datingapp.config;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.HttpHeaders;
-import java.io.IOException;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
+
+import java.lang.reflect.Type;
+import java.time.LocalDate;
 
 /**
- *
  * @author Yaw Agyepong <yaw.agyepong@gmail.com>
  */
-@Path("/")
-@Produces("application/vnd.datingapp+json")
-public class RootController {
-    @GET
-    public void getSiteRoot(
-            @Context final HttpServletRequest request,
-            @Context final HttpServletResponse response,
-            @HeaderParam(HttpHeaders.AUTHORIZATION) String authToken) throws ServletException, IOException {
-        if(authToken == null || authToken.isBlank()) {
-            request.getRequestDispatcher("/auth").forward(request, response);
-        } else {
-            request.getRequestDispatcher("/users/3").forward(request, response);
-        }
+public class LocalDataTypeAdapter implements JsonSerializer<LocalDate> {
+    @Override
+    public JsonElement serialize(LocalDate date, Type typeOfSrc, JsonSerializationContext context) {
+        return new JsonPrimitive(date.toString());
     }
 }

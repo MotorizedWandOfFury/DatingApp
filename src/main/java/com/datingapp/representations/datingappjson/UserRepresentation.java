@@ -26,99 +26,35 @@ package com.datingapp.representations.datingappjson;
 import com.datingapp.models.User;
 import com.datingapp.representations.Action;
 import com.datingapp.representations.Representation;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.stream.Collectors;
 
 /**
  *
  * @author Yaw Agyepong <yaw.agyepong@gmail.com>
  */
 public final class UserRepresentation implements Representation<User> {
-
-    private final User user;
-    private final ArrayList<Representation<?>> children;
-    private final HashMap<String, String> links;
-    private final ArrayList<Action> actions;
+    private final DatingAppJsonRepresentationBuilder<User> representationBuilder;
 
     public UserRepresentation(User user) {
-        this.user = user;
-        this.children = new ArrayList<>();
-        this.links = new HashMap<>();
-        this.actions = new ArrayList<>();
+        representationBuilder = new DatingAppJsonRepresentationBuilder<>(user, "User");
     }
 
     @Override
-    public Representation<User> addChild(Representation<?> childRepresentation) {
-        children.add(childRepresentation);
-        return this;
+    public void addChild(Representation<?> childRepresentation) {
+        representationBuilder.addChild(childRepresentation);
     }
 
     @Override
-    public Representation<User> addLink(String relationship, String href) {
-        links.put(relationship, href);
-        return this;
+    public void addLink(String relationship, String href) {
+        representationBuilder.addLink(relationship, href);
     }
 
     @Override
-    public Representation<User> addAction(Action action) {
-        actions.add(action);
-        return this;
-    }
-
-    private String generateProperties() {
-        return "{"
-                + "\"userId\": \"" + user.userName() + "\", "
-                + "\"firstName\": \"" + user.firstName() + "\", "
-                + "\"lastName\": \"" + user.lastName() + "\", "
-                + "\"birthDate\": \"" + user.birthDate().toString() + "\", "
-                + "\"ethnicity\": \"" + user.ethnicity() + "\", "
-                + "\"gender\": \"" + user.gender() + "\", "
-                + "\"religion\": \"" + user.religion() + "\", "
-                + "\"politicalOrientation\": \"" + user.politicalOrientation() + "\", "
-                + "}";
-    }
-
-    private String generateChildren() {
-        return children.stream().map(Object::toString).collect(Collectors.joining(","));
-    }
-
-    private String generateLinks() {
-        return links.entrySet().stream().map(entry -> String.format("{\"rel\":\"%s\", \"href\":\"%s\"}", entry.getKey(), entry.getValue())).collect(Collectors.joining(","));
-    }
-
-    private String generateActions() {
-        return "";
+    public void addAction(Action action) {
+        representationBuilder.addAction(action);
     }
 
     @Override
     public String build() {
-        String typeKey = "%TYPE%";
-        String propertiesKey = "%PROPERTIES%";
-        String childrenKey = "%CHILDREN%";
-        String linkKey = "%LINKS%";
-        String actionsKey = "%ACTIONS%";
-        
-        String datingAppJsonTemplate = "{"
-                + "\"type\":" + "\""+typeKey+"\","
-                + "\"properties\": "
-                + propertiesKey
-                + ","
-                + "\"children\": ["
-                + childrenKey
-                + "],"
-                + "\"links\": ["
-                + linkKey
-                + "],"
-                + "\"actions\": ["
-                + actionsKey
-                + "]"
-                + "}";
-        
-        return datingAppJsonTemplate.replace(typeKey, "User")
-                .replace(propertiesKey, generateProperties())
-                .replace(childrenKey, generateChildren())
-                .replace(linkKey, generateLinks())
-                .replace(actionsKey, generateActions());
+        return representationBuilder.build();
     }
 }

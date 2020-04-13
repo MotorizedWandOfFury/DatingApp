@@ -28,11 +28,11 @@ package com.datingapp.representations;
  * @author Yaw Agyepong <yaw.agyepong@gmail.com>
  */
 public interface Representation<T> {
-    public Representation<T> addChild(Representation<?> childRepresentation);
+    public void addChild(Representation<?> childRepresentation);
     
-    public Representation<T> addLink(String relationship, String href);
+    public void addLink(String relationship, String href);
     
-    public Representation<T> addAction(Action action);
+    public void addAction(Action action);
     
     public String build();
 }
