@@ -28,6 +28,7 @@ package com.datingapp.db;
 import com.datingapp.models.User;
 import org.jooq.generated.tables.records.UsersRecord;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 /**
@@ -43,7 +44,7 @@ public class PgUser implements User {
     private final String religion;
     private final String politicalOrientation;
 
-    PgUser(UsersRecord usersRecord) {
+    PgUser(@NotNull UsersRecord usersRecord) {
         userName = usersRecord.getUserName();
         firstName = usersRecord.getFirstName();
         lastName = usersRecord.getLastName();

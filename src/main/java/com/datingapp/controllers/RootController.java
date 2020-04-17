@@ -25,6 +25,9 @@
 
 package com.datingapp.controllers;
 
+import com.datingapp.db.PgUsers;
+import com.datingapp.models.Users;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -47,11 +50,11 @@ public class RootController {
     public void getSiteRoot(
             @Context final HttpServletRequest request,
             @Context final HttpServletResponse response,
-            @HeaderParam(HttpHeaders.AUTHORIZATION) String authToken) throws ServletException, IOException {
+            @HeaderParam(HttpHeaders.AUTHORIZATION) final String authToken) throws ServletException, IOException {
         if(authToken == null || authToken.isBlank()) {
             request.getRequestDispatcher("/auth").forward(request, response);
         } else {
-            request.getRequestDispatcher("/users/3").forward(request, response);
+            request.getRequestDispatcher("/user").forward(request, response);
         }
     }
 }

@@ -35,6 +35,7 @@ import org.jooq.impl.DSL;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+import static org.jooq.generated.Tables.TOKENS;
 import static org.jooq.generated.Tables.USERS;
 
 /**
@@ -42,32 +43,17 @@ import static org.jooq.generated.Tables.USERS;
  */
 public final class PgUsers implements Users {
 
-    public User getUserById(int id) throws SQLException {
+    @Override
+    public User getUserByToken(String token) throws SQLException {
         User user = null;
 
         try (Connection con = TomcatDataSource.INSTANCE.getAvailableConnection()) {
             DSLContext jooqContext = DSL.using(con, SQLDialect.POSTGRES);
             UsersRecord usersRecord = jooqContext.select()
                     .from(USERS)
-                    .where(USERS.ID.eq(id))
-                    .fetchOne()
-                    .into(USERS);
-
-            user = new PgUser(usersRecord);
-        }
-
-        return user;
-    }
-
-    public User getUserByUsernameAndPassword(String userId, String password) throws SQLException {
-        User user = null;
-
-        try (Connection con = TomcatDataSource.INSTANCE.getAvailableConnection()) {
-            DSLContext jooqContext = DSL.using(con, SQLDialect.POSTGRES);
-            UsersRecord usersRecord = jooqContext.select()
-                    .from(USERS)
-                    .where(USERS.USER_NAME.eq(userId))
-                    .and(USERS.PASSWORD.eq(password))
+                    .join(TOKENS)
+                    .on(USERS.ID.eq(TOKENS.USER_ID))
+                    .where(TOKENS.TOKEN.eq(token))
                     .fetchOne()
                     .into(USERS);
 

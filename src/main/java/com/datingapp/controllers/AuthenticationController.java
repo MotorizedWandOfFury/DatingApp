@@ -46,14 +46,14 @@ public final class AuthenticationController {
     @Produces("application/vnd.datingapp+json")
     @ManagedAsync
     public void provideAuth(@Suspended final AsyncResponse response) {
-        Auth auth = new Auth() {
+        var auth = new Auth() {
             @Override
             public String toString() {
                 return super.toString();
             }
         };
 
-        AuthRepresentation representation = new AuthRepresentation(auth);
+        var representation = new AuthRepresentation(auth);
         representation.addAction(Action.newLoginAction());
         representation.addLink("self", "/auth");
         representation.addLink("sign-up", "/registration");

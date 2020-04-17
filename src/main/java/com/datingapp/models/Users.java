@@ -25,11 +25,8 @@
 
 package com.datingapp.models;
 
-import com.datingapp.models.User;
-
 import java.sql.SQLException;
 
 public interface Users {
-    public User getUserById(int id) throws SQLException;
-    public User getUserByUsernameAndPassword(String userId, String password) throws SQLException;
+    public User getUserByToken(String token) throws SQLException;
 }

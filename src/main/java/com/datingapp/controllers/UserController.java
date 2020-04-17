@@ -43,32 +43,31 @@ import javax.ws.rs.core.Response;
 import java.sql.SQLException;
 
 /**
- *
  * @author Yaw Agyepong <yaw.agyepong@gmail.com>
  */
-@Path("/users")
+@Path("/user")
 public final class UserController {
     @GET
-    @Path("/{username}")
     @Produces("application/vnd.datingapp+json")
     @ManagedAsync
     public void getUser(
-            @PathParam("username") String username,
-            @HeaderParam(HttpHeaders.AUTHORIZATION) String authToken,
+            @HeaderParam(HttpHeaders.AUTHORIZATION) String authorization,
             @Suspended final AsyncResponse response) {
 
         try {
             Users users = new PgUsers();
-            User user = users.getUserById(1);
+            String authToken = authorization.replace("Bearer ", "").trim();
+            User user = users.getUserByToken(authToken);
 
-            if(user == null) {
-                response.resume(new NotFoundException()) ;
+            if (user == null) {
+                response.resume(new NotFoundException());
+                return;
             }
 
             UserRepresentation representation = new UserRepresentation(user);
-            representation.addLink("self", "/users/"+username);
+            representation.addLink("self", "/user");
 
-             response.resume(Response.ok(representation).build());
+            response.resume(Response.ok(representation).build());
         } catch (SQLException e) {
             System.err.println(e.getMessage());
             response.resume(new InternalServerErrorException(e));

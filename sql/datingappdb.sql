@@ -1,4 +1,5 @@
-drop table if exists Users;
+drop table if exists Users cascade;
+drop table if exists Tokens;
 
 drop type if exists EthnicityOption;
 drop type if exists GenderOption;
@@ -23,4 +24,10 @@ gender GenderOption not null,
 ethnicity EthnicityOption not null,
 politicalOrientation PoliticalOrientationOption not null,
 location point not null
+);
+
+create table Tokens (
+token char(100) primary key,
+user_id serial references Users(id) on delete cascade,
+expiration_date date not null
 );
