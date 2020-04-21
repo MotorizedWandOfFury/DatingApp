@@ -27,13 +27,13 @@ package com.datingapp.representations.datingappjson;
 
 import com.datingapp.config.LocalDataTypeAdapter;
 import com.datingapp.representations.Action;
+import com.datingapp.representations.Link;
 import com.datingapp.representations.Representation;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * @author Yaw Agyepong <yaw.agyepong@gmail.com>
@@ -43,14 +43,14 @@ public final class DatingAppJsonRepresentationBuilder<T> implements Representati
     @SerializedName("type") private final String type;
     @SerializedName("properties") private final T resource;
     @SerializedName("children") private final ArrayList<Representation<?>> children;
-    @SerializedName("links") private final HashMap<String, String> links;
+    @SerializedName("links") private final ArrayList<Link> links;
     @SerializedName("actions") private final ArrayList<Action> actions;
 
     DatingAppJsonRepresentationBuilder(T resource, String type) {
         this.resource = resource;
         this.type = type;
         this.children = new ArrayList<>();
-        this.links = new HashMap<>();
+        this.links = new ArrayList<>();
         this.actions = new ArrayList<>();
     }
 
@@ -61,7 +61,7 @@ public final class DatingAppJsonRepresentationBuilder<T> implements Representati
 
     @Override
     public void addLink(String relationship, String href) {
-        links.put(relationship, href);
+        links.add(new Link(relationship, href));
     }
 
     @Override
